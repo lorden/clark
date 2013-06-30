@@ -1,0 +1,12 @@
+* {
+    font-family: "Titillium Web", Helvetica, arial;
+}
+h1 {
+    font-size: 50px;
+    font-weight: normal;
+    margin: 0;
+}
+
+#clock {
+    float: right;
+}
