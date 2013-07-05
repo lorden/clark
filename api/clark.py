@@ -16,9 +16,6 @@ def dashboard():
 
     #  Weather
     w = Weather()
-    current_temperature = w.get_current_temperature()
-    condition = w.get_current_condition()
-    weather_image = 'img/%s.png' % condition.lower()
 
     data = {
         'time': local_time,
@@ -26,16 +23,29 @@ def dashboard():
         'weather': {
             'temperature_unit': w.temperature_unit,
             'today': {
-                'temperature': w.get_current_temperature(),
-                'low': w.get_today_low(),
-                'high': w.get_today_high(),
-                'high': current_temperature,
-                'condition': condition,
-                'image': weather_image,
+                'temperature': w.get('today.temperature'),
+                'low': w.get('today.low'),
+                'high': w.get('today.high'),
+                'condition': w.get('today.condition'),
+                'image': 'img/%s.png' % w.get('today.condition').lower().replace(' ', '_'),
+            },
+            'tomorrow': {
+                'low': w.get('tomorrow.low'),
+                'high': w.get('tomorrow.high'),
+                'condition': w.get('tomorrow.condition'),
+            },
+            'after_tomorrow': {
+                'low': w.get('after_tomorrow.low'),
+                'high': w.get('after_tomorrow.high'),
+                'condition': w.get('after_tomorrow.condition'),
             }
          }
     }
 
+    print
+    print data
+    print
+        
     res = make_response(json.dumps(data))
     res.mimetype = 'application/json'
     res.headers['Access-Control-Allow-Origin'] = '*'

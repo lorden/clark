@@ -24,6 +24,12 @@ function updateWeather() {
         $('#weather-condition').html(data.weather.today.condition);
         $('#weather-high').html("High: " + data.weather.today.high);
         $('#weather-low').html("Low: " + data.weather.today.low);
+        $('#tomorrow-low').html("Low: " + data.weather.tomorrow.low);
+        $('#tomorrow-high').html("High: " + data.weather.tomorrow.high);
+        $('#tomorrow-condition').html("Condition: " + data.weather.tomorrow.condition);
+        $('#aftertomorrow-low').html("Low: " + data.weather.after_tomorrow.low);
+        $('#aftertomorrow-high').html("High: " + data.weather.after_tomorrow.high);
+        $('#aftertomorrow-condition').html("Condition: " + data.weather.after_tomorrow.condition);
     });
 }
 

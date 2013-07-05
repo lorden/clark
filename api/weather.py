@@ -11,7 +11,11 @@ class Weather:
     longitude = 0
     api_url = 'http://weather.yahooapis.com/forecastrss?w=12797160&u=c'
     temperature_unit = 'C'
-    values = {'today': {}}
+    values = {
+        'today': {}, 
+        'tomorrow': {}, 
+        'after_tomorrow': {}
+    }
 
     def __init__(self, unit='metric'):
         self.cache = MemcachedCache(['127.0.0.1:11211'])
@@ -21,7 +25,6 @@ class Weather:
 
     def get_data(self):
         wdata = self.cache.get('weather-data')
-        wdata = None
         if wdata is None:
             print "Cache is empty"
             print "Querying: %s" % self.api_url
@@ -38,31 +41,47 @@ class Weather:
         self.values['today']['temperature'] = data.xpath(
             '//channel/item/yweather:condition', 
             namespaces=namespaces)[0].attrib['temp']
-        # Weather condition: sunny, cloudy, etc.
+        # Today's values
         self.values['today']['condition'] = data.xpath(
             '//channel/item/yweather:condition', 
             namespaces=namespaces)[0].attrib['text']
-        # Today's low and high
         self.values['today']['low'] = data.xpath(
             '//channel/item/yweather:forecast', 
             namespaces=namespaces)[0].attrib['low']
         self.values['today']['high'] = data.xpath(
             '//channel/item/yweather:forecast', 
             namespaces=namespaces)[0].attrib['high']
+        # Tomorrow's values
+        self.values['tomorrow']['condition'] = data.xpath(
+            '//channel/item/yweather:forecast', 
+            namespaces=namespaces)[1].attrib['text']
+        self.values['tomorrow']['low'] = data.xpath(
+            '//channel/item/yweather:forecast', 
+            namespaces=namespaces)[1].attrib['low']
+        self.values['tomorrow']['high'] = data.xpath(
+            '//channel/item/yweather:forecast', 
+            namespaces=namespaces)[1].attrib['high']
+        # After tomorrow's low and high
+        self.values['after_tomorrow']['condition'] = data.xpath(
+            '//channel/item/yweather:forecast', 
+            namespaces=namespaces)[2].attrib['text']
+        self.values['after_tomorrow']['low'] = data.xpath(
+            '//channel/item/yweather:forecast', 
+            namespaces=namespaces)[2].attrib['low']
+        self.values['after_tomorrow']['high'] = data.xpath(
+            '//channel/item/yweather:forecast', 
+            namespaces=namespaces)[2].attrib['high']
 
-        
-    def get_current_temperature(self):
-        return self.values['today']['temperature']
-
-    def get_current_condition(self):
-        return self.values['today']['condition']
-
-    def get_today_low(self):
-        return self.values['today']['low']
-
-    def get_today_high(self):
-        return self.values['today']['high']
-
+    def get(self, string):
+        keys = string.split('.')
+        value = self.values
+        for key in keys:
+            if key in value:
+                value = value[key]
+            else:
+                return None
+        return value
+            
     def convert(self, value, from_unit, to_unit):
         if from_unit == 'K' and to_unit == 'C':
             return float(value) - 273.15
