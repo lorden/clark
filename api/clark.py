@@ -17,17 +17,22 @@ def dashboard():
     #  Weather
     w = Weather()
     current_temperature = w.get_current_temperature()
-    description = w.get_description()
-    weather_image = 'img/%s.png' % description
+    condition = w.get_current_condition()
+    weather_image = 'img/%s.png' % condition.lower()
 
     data = {
         'time': local_time,
         'date': local_date,
         'weather': {
             'temperature_unit': w.temperature_unit,
-            'current_temperature': current_temperature,
-            'description': description,
-            'image': weather_image,
+            'today': {
+                'temperature': w.get_current_temperature(),
+                'low': w.get_today_low(),
+                'high': w.get_today_high(),
+                'high': current_temperature,
+                'condition': condition,
+                'image': weather_image,
+            }
          }
     }
 

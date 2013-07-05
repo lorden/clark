@@ -17,10 +17,13 @@ function new_updateClock() {
 function updateWeather() {
     $.getJSON('http://127.0.0.1:5000', function(data) {
         $('#current-temperature').html(
-            Math.round(data.weather.current_temperature) +
+            Math.round(data.weather.today.temperature) +
             ' &deg;' +
             data.weather.temperature_unit); 
-        $('#weather-image').attr('src', data.weather.image);
+        $('#weather-image').attr('src', data.weather.today.image);
+        $('#weather-condition').html(data.weather.today.condition);
+        $('#weather-high').html("High: " + data.weather.today.high);
+        $('#weather-low').html("Low: " + data.weather.today.low);
     });
 }
 
