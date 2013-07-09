@@ -8,14 +8,16 @@ $(document).ready(function(){
     });
 });
 
+var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
+
 function new_updateClock() {
-    $.getJSON('http://127.0.0.1:5000', function(data) {
+    $.getJSON(api_url, function(data) {
         $('#clock').html(data.time); 
     });
 }
 
 function updateWeather() {
-    $.getJSON('http://127.0.0.1:5000', function(data) {
+    $.getJSON(api_url, function(data) {
         $('#current-temperature').html(
             Math.round(data.weather.today.temperature) +
             ' &deg;' +
