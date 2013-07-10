@@ -7,6 +7,16 @@ h1 {
     margin: 0;
 }
 
-#clock {
+#right-panel {
     float: right;
+    font-size: 3em;
+}
+
+.weather-day {
+    width: 20%;
+    float: left;
+    background-color: white;
+    padding: 5px;
+    margin: 0 5px;
+    text-align: center;
 }

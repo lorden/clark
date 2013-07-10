@@ -12,26 +12,39 @@
 <body>
     <div data-role="page" id="dashboard">
         <div data-role="content">
-            <div id="clock"></div>
-            <div id="current-temperature"></div>
-            <img id="weather-image" src=""/>
-            <div id="weather-condition"></div>
-            <div id="weather-high"></div>
-            <div id="weather-low"></div>
-            <h2>Tomorrow</h2>
-            <div id="tomorrow-high"></div>
-            <div id="tomorrow-low"></div>
-            <div id="tomorrow-condition"></div>
-            <h2>After tomorrow</h2>
-            <div id="aftertomorrow-high"></div>
-            <div id="aftertomorrow-low"></div>
-            <div id="aftertomorrow-condition"></div>
+            <div id="right-panel">
+                <div id="clock"></div>
+                <div id="current-temperature"></div>
+            </div>
+            <div class="weather-day">
+                <h2>Today</h2>
+                <img id="today-image" src="" class="weather-image"/>
+                <div id="today-condition"></div>
+                <div id="today-high"></div>
+                <div id="today-low"></div>
+            </div>
+            <div class="weather-day">
+                <h2 id="tomorrow-title">Tomorrow</h2>
+                <img id="tomorrow-image" src="" class="weather-image"/>
+                <div id="tomorrow-condition"></div>
+                <div id="tomorrow-high"></div>
+                <div id="tomorrow-low"></div>
+            </div>
+            <div class="weather-day">
+                <h2 id="aftertomorrow-title">After tomorrow</h2>
+                <img id="aftertomorrow-image" src="" class="weather-image"/>
+                <div id="aftertomorrow-condition"></div>
+                <div id="aftertomorrow-high"></div>
+                <div id="aftertomorrow-low"></div>
+            </div>
         </div>
+        <!--
         <div data-theme="a" data-role="footer" data-position="fixed">
             <h3 id="reload">
                 Reload
             </h3>
         </div>
+        -->
     </div>
 </body>
 </html>

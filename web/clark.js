@@ -6,6 +6,11 @@ $(document).ready(function(){
     $('#reload').click(function(){
         window.location.reload();
     });
+    // Default images
+    $('#today-image, #tomorrow-image, #aftertomorrow-image').error(function(){
+        console.log($(this).attr('id'));
+        $(this).attr('src', 'img/not_available.png');
+    });
 });
 
 var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
@@ -18,20 +23,26 @@ function new_updateClock() {
 
 function updateWeather() {
     $.getJSON(api_url, function(data) {
-        $('#current-temperature').html(
-            Math.round(data.weather.today.temperature) +
-            ' &deg;' +
-            data.weather.temperature_unit); 
-        $('#weather-image').attr('src', data.weather.today.image);
-        $('#weather-condition').html(data.weather.today.condition);
-        $('#weather-high').html("High: " + data.weather.today.high);
-        $('#weather-low').html("Low: " + data.weather.today.low);
-        $('#tomorrow-low').html("Low: " + data.weather.tomorrow.low);
-        $('#tomorrow-high').html("High: " + data.weather.tomorrow.high);
-        $('#tomorrow-condition').html("Condition: " + data.weather.tomorrow.condition);
-        $('#aftertomorrow-low').html("Low: " + data.weather.after_tomorrow.low);
-        $('#aftertomorrow-high').html("High: " + data.weather.after_tomorrow.high);
-        $('#aftertomorrow-condition').html("Condition: " + data.weather.after_tomorrow.condition);
+        var tu = ' &deg;' + data.weather.temperature_unit;
+        // Today
+        $('#current-temperature').html('Now: ' + Math.round(data.weather.today.temperature) + tu); 
+        $('#today-image').attr('src', data.weather.today.image);
+        $('#today-condition').html(data.weather.today.condition);
+        $('#today-high').html("High: " + data.weather.today.high + tu);
+        $('#today-low').html("Low: " + data.weather.today.low + tu);
+
+        // Tomorrow
+        $('#tomorrow-title').html(get_day_name(1));
+        $('#tomorrow-image').attr('src', data.weather.tomorrow.image);
+        $('#tomorrow-condition').html(data.weather.tomorrow.condition);
+        $('#tomorrow-low').html("Low: " + data.weather.tomorrow.low + tu);
+        $('#tomorrow-high').html("High: " + data.weather.tomorrow.high + tu);
+        // After tomorrow
+        $('#aftertomorrow-title').html(get_day_name(2));
+        $('#aftertomorrow-image').attr('src', data.weather.after_tomorrow.image);
+        $('#aftertomorrow-condition').html(data.weather.after_tomorrow.condition);
+        $('#aftertomorrow-low').html("Low: " + data.weather.after_tomorrow.low + tu);
+        $('#aftertomorrow-high').html("High: " + data.weather.after_tomorrow.high + tu);
     });
 }
 
@@ -60,4 +71,23 @@ function updateClock ( ) {
 
   // Update the time display
   $('#clock').html(currentTimeString);
+}
+
+function get_day_name(delta){
+    if (delta == 'undefined') delta = 0;
+    var d = new Date();
+    day = d.getDay();
+    day += delta;
+    if (day > 7) {
+        day -= 7;
+    }
+    var weekday=new Array(7);
+    weekday[0]="Sunday";
+    weekday[1]="Monday";
+    weekday[2]="Tuesday";
+    weekday[3]="Wednesday";
+    weekday[4]="Thursday";
+    weekday[5]="Friday";
+    weekday[6]="Saturday";
+    return weekday[day];
 }
