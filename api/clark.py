@@ -33,11 +33,13 @@ def dashboard():
                 'low': w.get('tomorrow.low'),
                 'high': w.get('tomorrow.high'),
                 'condition': w.get('tomorrow.condition'),
+                'image': 'img/%s.png' % w.get('tomorrow.condition').lower().replace(' ', '_'),
             },
             'after_tomorrow': {
                 'low': w.get('after_tomorrow.low'),
                 'high': w.get('after_tomorrow.high'),
                 'condition': w.get('after_tomorrow.condition'),
+                'image': 'img/%s.png' % w.get('after_tomorrow.condition').lower().replace(' ', '_'),
             }
          }
     }
