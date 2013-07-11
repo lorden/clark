@@ -46,7 +46,8 @@ function updateWeather() {
     });
 }
 
-function updateClock ( ) {
+function updateClock () {
+  // Use built-in javascript Date object
   var currentTime = new Date ( );
 
   var currentHours = currentTime.getHours ( );
@@ -71,16 +72,21 @@ function updateClock ( ) {
 
   // Update the time display
   $('#clock').html(currentTimeString);
+  updateDate(currentTime);
 }
 
-function get_day_name(delta){
-    if (delta == 'undefined') delta = 0;
-    var d = new Date();
-    day = d.getDay();
-    day += delta;
-    if (day > 7) {
-        day -= 7;
-    }
+function updateDate (currentTime) {
+  var dayOfWeek = get_day_name(currentTime.getDay());
+  var dayOfMonth = currentTime.getDate();
+  var month = get_month_name(currentTime.getMonth());
+  var currentDateString = dayOfWeek.substr(0,3) + ", " + month.substr(0,3) + " " + dayOfMonth;
+  $('#day').html(currentDateString);
+}
+
+function get_day_name(day, delta){
+    if (typeof(delta) === 'undefined') delta = 0;
+    day = day + delta;
+    if (day > 7) day = day % 7;
     var weekday=new Array(7);
     weekday[0]="Sunday";
     weekday[1]="Monday";
@@ -90,4 +96,21 @@ function get_day_name(delta){
     weekday[5]="Friday";
     weekday[6]="Saturday";
     return weekday[day];
+}
+
+function get_month_name(month){
+    var months=new Array(12);
+    months[0]="January";
+    months[1]="February";
+    months[2]="March";
+    months[3]="April";
+    months[4]="May";
+    months[5]="June";
+    months[6]="July";
+    months[7]="August";
+    months[8]="September";
+    months[9]="October";
+    months[10]="November";
+    months[11]="December";
+    return months[month];
 }
