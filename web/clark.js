@@ -79,6 +79,7 @@ function updateDate (currentTime) {
   var dayOfWeek = get_day_name(currentTime.getDay());
   var dayOfMonth = currentTime.getDate();
   var month = get_month_name(currentTime.getMonth());
+  // should add customizations to date string order/appearance based on user settings here
   var currentDateString = dayOfWeek.substr(0,3) + ", " + month.substr(0,3) + " " + dayOfMonth;
   $('#day').html(currentDateString);
 }
