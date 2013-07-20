@@ -2,10 +2,47 @@ from flask import Flask, make_response
 import json
 import time
 from weather import Weather
+from Calendar import Calendar
 
 
 app = Flask(__name__)
 
+
+@app.route("/calendar")
+def calendar():
+    from hashlib import md5
+    #  Calendar
+    cal = Calendar()
+    with open('calendars.cfg') as f:
+        c = f.readline()
+        events = []
+        while c:
+            cid, cname = c.split(',')
+            events += cal.get_events(cid.strip(), cname.strip())
+            c = f.readline()
+    # Remove duplicates, only for 2 cals
+    single_events = {}
+    for e in events:
+        key = ''
+        if e['name']:
+            key += e['name'].encode('ascii', 'ignore')
+        if e['start']:
+            key += e['start'].encode('ascii', 'ignore')
+        if e['description']:
+            key += e['description'].encode('ascii', 'ignore')
+        key = md5(key).hexdigest()
+        if key not in single_events:
+            single_events[key] = e
+        else:
+            single_events[key]['calendar'] = 'all'
+    
+    events = sorted(events, key=lambda event: event['start'])
+    data = { 'events': events }
+
+    res = make_response(json.dumps(data))
+    res.mimetype = 'application/json'
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
 
 @app.route("/")
 def dashboard():
@@ -43,6 +80,7 @@ def dashboard():
             }
          }
     }
+
 
     print
     print data
