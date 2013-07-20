@@ -3,6 +3,8 @@ $(document).ready(function(){
     updateWeather();
     setInterval('updateClock()', 1 * 1000); 
     setInterval('updateWeather()', 5 * 60 * 1000); 
+    setInterval('updateEvents()', 60 * 60 * 1000); 
+    updateEvents();
     $('#reload').click(function(){
         window.location.reload();
     });
@@ -14,10 +16,60 @@ $(document).ready(function(){
 });
 
 var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
+//var api_url = 'http://127.0.0.1:5000/';
 
 function new_updateClock() {
     $.getJSON(api_url, function(data) {
         $('#clock').html(data.time); 
+    });
+}
+
+function updateEvents() {
+    $.getJSON(api_url + 'calendar', function(data) {
+        $('#events').html('');
+        console.log(data.events);
+        for(i in data.events){
+            e = data.events[i];
+            // Start Date
+            date = e.start.split(' ')[0].split('-');
+            if (e.start.split(' ').length > 1) {
+                time = e.start.split(' ')[1].split(':');
+            } else {
+                time = ['00', '00', '00'];
+            }
+            sdate = new Date(date[0], date[1], date[2], time[0], time[1], time[2]);
+            psdate = sdate.getDate() + '/' + sdate.getMonth();
+            mins = sdate.getMinutes() > 9 ? sdate.getMinutes() : ('0' + sdate.getMinutes())
+            pstime = sdate.getHours() + ':' + mins;
+
+            // End Date
+            date = e.end.split(' ')[0].split('-');
+            if (e.end.split(' ').length > 1) {
+                time = e.end.split(' ')[1].split(':');
+            } else {
+                time = ['00', '00', '00'];
+            }
+            edate = new Date(date[0], date[1], date[2], time[0], time[1], time[2]);
+            pedate = edate.getDate() + '/' + edate.getMonth();
+            mins = edate.getMinutes() > 9 ? edate.getMinutes() : ('0' + edate.getMinutes())
+            petime = edate.getHours() + ':' + mins;
+    
+            // Description
+            if (e.description == null) {
+                description = '';
+            }
+            else {
+                description = e.description;
+            }
+            $('#events').append(
+                '<div class="event ' + e.calendar + '">' +
+                '  <div class="event-date">' + psdate + '-' + pstime  + '</div>' +
+                '  <div class="event-title">' + e.name + '</div>' +
+                '  <div class="event-description">' + description + '</div>' +
+                '</div>'
+
+            );
+        }
     });
 }
 
