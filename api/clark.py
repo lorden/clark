@@ -45,7 +45,7 @@ def calendar():
         else:
             single_events[key]['calendar'] = 'all'
     
-    events = sorted(events, key=lambda event: event['start'])
+    events = sorted(single_events.values(), key=lambda event: event['start'])
     data = { 'events': events }
 
     res = make_response(json.dumps(data))
