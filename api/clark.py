@@ -3,10 +3,19 @@ import json
 import time
 from weather import Weather
 from Calendar import Calendar
+from nextbus import NextBus
 
 
 app = Flask(__name__)
 
+@app.route("/bus")
+def bus():
+    n = NextBus()
+    data = n.get_times()
+    res = make_response(json.dumps(data))
+    res.mimetype = 'application/json'
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
 
 @app.route("/calendar")
 def calendar():
@@ -81,10 +90,6 @@ def dashboard():
          }
     }
 
-
-    print
-    print data
-    print
         
     res = make_response(json.dumps(data))
     res.mimetype = 'application/json'

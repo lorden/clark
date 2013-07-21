@@ -1,9 +1,11 @@
 $(document).ready(function(){
     updateClock();
     updateWeather();
+    updateBus();
     setInterval('updateClock()', 1 * 1000); 
     setInterval('updateWeather()', 5 * 60 * 1000); 
     setInterval('updateEvents()', 60 * 60 * 1000); 
+    setInterval('updateBus()', 60 * 1000);
     updateEvents();
     $('#reload').click(function(){
         window.location.reload();
@@ -15,8 +17,8 @@ $(document).ready(function(){
     });
 });
 
-var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
-//var api_url = 'http://127.0.0.1:5000/';
+// var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
+var api_url = 'http://127.0.0.1:5000/';
 
 function new_updateClock() {
     $.getJSON(api_url, function(data) {
@@ -27,7 +29,6 @@ function new_updateClock() {
 function updateEvents() {
     $.getJSON(api_url + 'calendar', function(data) {
         $('#events').html('');
-        console.log(data.events);
         for(i in data.events){
             e = data.events[i];
             // Start Date
@@ -99,41 +100,41 @@ function updateWeather() {
 }
 
 function updateClock () {
-  // Use built-in javascript Date object
-  var currentTime = new Date ( );
+    // Use built-in javascript Date object
+    var currentTime = new Date ( );
 
-  var currentHours = currentTime.getHours ( );
-  var currentMinutes = currentTime.getMinutes ( );
-  var currentSeconds = currentTime.getSeconds ( );
+    var currentHours = currentTime.getHours ( );
+    var currentMinutes = currentTime.getMinutes ( );
+    var currentSeconds = currentTime.getSeconds ( );
 
-  // Pad the minutes and seconds with leading zeros, if required
-  currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
-  currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+    // Pad the minutes and seconds with leading zeros, if required
+    currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+    currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
 
-  // Choose either "AM" or "PM" as appropriate
-  var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+    // Choose either "AM" or "PM" as appropriate
+    var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
 
-  // Convert the hours component to 12-hour format if needed
-  currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+    // Convert the hours component to 12-hour format if needed
+    currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
 
-  // Convert an hours component of "0" to "12"
-  currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+    // Convert an hours component of "0" to "12"
+    currentHours = ( currentHours == 0 ) ? 12 : currentHours;
 
-  // Compose the string for display
-  var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+    // Compose the string for display
+    var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
 
-  // Update the time display
-  $('#clock').html(currentTimeString);
-  updateDate(currentTime);
+    // Update the time display
+    $('#clock').html(currentTimeString);
+    updateDate(currentTime);
 }
 
 function updateDate (currentTime) {
-  var dayOfWeek = get_day_name(currentTime.getDay());
-  var dayOfMonth = currentTime.getDate();
-  var month = get_month_name(currentTime.getMonth());
-  // should add customizations to date string order/appearance based on user settings here
-  var currentDateString = dayOfWeek.substr(0,3) + ", " + month.substr(0,3) + " " + dayOfMonth;
-  $('#day').html(currentDateString);
+    var dayOfWeek = get_day_name(currentTime.getDay());
+    var dayOfMonth = currentTime.getDate();
+    var month = get_month_name(currentTime.getMonth());
+    // should add customizations to date string order/appearance based on user settings here
+    var currentDateString = dayOfWeek.substr(0,3) + ", " + month.substr(0,3) + " " + dayOfMonth;
+    $('#day').html(currentDateString);
 }
 
 function get_day_name(day, delta){
@@ -166,4 +167,19 @@ function get_month_name(month){
     months[10]="November";
     months[11]="December";
     return months[month];
+}
+
+function updateBus(){
+    $.getJSON(api_url + 'bus', function(data) {
+        var htmled = "";
+        for (bus_line in data) {
+            htmled = htmled + 
+                     "<tr><td>" + data[bus_line][0] + "</td>" +
+                     "<td>" + data[bus_line][1][0] + "</td>" +
+                     "<td>" + data[bus_line][1][1] + "</td>" +
+                     "<td>" + data[bus_line][1][2] + "</td></tr>"
+        }
+        htmled = "<table id='nextbus'>" + htmled + "</table>";
+        $('#bus').html(htmled); 
+    });
 }
