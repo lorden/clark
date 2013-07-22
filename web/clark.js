@@ -12,8 +12,7 @@ $(document).ready(function(){
     });
 });
 
-// var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
-var api_url = 'http://127.0.0.1:5000/';
+var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
 
 function new_updateClock() {
     $.getJSON(api_url, function(data) {
@@ -139,7 +138,7 @@ function updateWeather() {
         '</div>';
     
     $.getJSON(api_url, function(data) {
-        $('#current-temperature').html(Math.round(data.weather.today.temperature) + tu); 
+        $('#current-temperature').html('<span class="large">' + Math.round(data.weather.today.temperature) + '</span><span class="small">' + tu + '</span>'); 
         // Today
         var day_data = {
             'day': 'Today',
@@ -197,10 +196,11 @@ function updateClock () {
     currentHours = ( currentHours == 0 ) ? 12 : currentHours;
 
     // Compose the string for display
-    var currentTimeString = currentHours + ":" + currentMinutes + " " + timeOfDay;
+    var current_time = currentHours + ":" + currentMinutes;
+    var ampm = timeOfDay;
 
     // Update the time display
-    $('#clock').html(currentTimeString);
+    $('#clock').html('<span class="large">' + current_time + '</span><span class="small">' + ampm + '</span>');
     updateDate(currentTime);
 }
 
