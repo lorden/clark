@@ -10,11 +10,6 @@ $(document).ready(function(){
     $('#reload').click(function(){
         window.location.reload();
     });
-    // Default images
-    $('#today-image, #tomorrow-image, #aftertomorrow-image').error(function(){
-        console.log($(this).attr('id'));
-        $(this).attr('src', 'img/not_available.png');
-    });
 });
 
 // var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
@@ -27,10 +22,55 @@ function new_updateClock() {
 }
 
 function updateEvents() {
+    var event_template =
+        '<div class="event-day">Today</div>' +
+        '{{ #today }}' +
+        '<div class="event {{ calendar }}">' +
+        '   <div class="event-date">{{ start }} / {{ end }}</div>' +
+        '   <div class="event-title">{{ title }}</div>' +
+        '</div>' +
+        '{{ /today }}' +
+        '{{ ^today }}' +
+        '<div class="event">' +
+        '  <div class="event-title">Hooray! No events for today.</div>' +
+        '</div>' +
+        '{{ /today }}' +
+        '<div class="event-day">Tomorrow</div>' +
+        '{{ #tomorrow }}' +
+        '<div class="event {{ calendar }}">' +
+        ' <div class="event-date">{{ start }} / {{ end }}</div>' +
+        ' <div class="event-title">{{ title }}</div>' +
+        '</div>' +
+        '{{ /tomorrow }}' +
+        '{{ ^tomorrow }}' +
+        '<div class="event">' +
+        '  <div class="event-title">Hooray! No events for tomorrow.</div>' +
+        '</div>' +
+        '{{ /tomorrow }}';
+    
     $.getJSON(api_url + 'calendar', function(data) {
-        $('#events').html('');
+        events_data = {
+            'today' : [],
+            'tomorrow': []
+        }
+
+        today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
         for(i in data.events){
             e = data.events[i];
+            event_data = {
+                'calendar': e.calendar,
+                'date': '',
+                'start': '',
+                'end': '',
+                'title': e.name,
+                'description': '',
+                'day': ''
+            }
             // Start Date
             date = e.start.split(' ')[0].split('-');
             if (e.start.split(' ').length > 1) {
@@ -38,10 +78,16 @@ function updateEvents() {
             } else {
                 time = ['00', '00', '00'];
             }
-            sdate = new Date(date[0], date[1], date[2], time[0], time[1], time[2]);
+            sdate = new Date(date[0], date[1]-1, date[2], time[0], time[1], time[2]);
+            if (sdate.getTime()+ 1000 > today.getTime() + 172800000) {
+                // This event doesn't belong here, 2 days only
+                continue;
+            }
             psdate = sdate.getDate() + '/' + sdate.getMonth();
             mins = sdate.getMinutes() > 9 ? sdate.getMinutes() : ('0' + sdate.getMinutes())
-            pstime = sdate.getHours() + ':' + mins;
+            event_data.date = sdate.getFullYear() + '-' + sdate.getMonth() + '-' + sdate.getDate();
+            event_data.start = sdate.getHours() + ':' + mins;
+            
 
             // End Date
             date = e.end.split(' ')[0].split('-');
@@ -53,49 +99,79 @@ function updateEvents() {
             edate = new Date(date[0], date[1], date[2], time[0], time[1], time[2]);
             pedate = edate.getDate() + '/' + edate.getMonth();
             mins = edate.getMinutes() > 9 ? edate.getMinutes() : ('0' + edate.getMinutes())
-            petime = edate.getHours() + ':' + mins;
+            event_data.end = edate.getHours() + ':' + mins;
+            if (edate - sdate == 86400000){
+                event_data.start = '';
+                event_data.end = '';
+            }
     
             // Description
-            if (e.description == null) {
-                description = '';
+            if (e.description != null) {
+                event_data.description = e.description;
             }
-            else {
-                description = e.description;
-            }
-            $('#events').append(
-                '<div class="event ' + e.calendar + '">' +
-                '  <div class="event-date">' + psdate + '-' + pstime  + '</div>' +
-                '  <div class="event-title">' + e.name + '</div>' +
-                '  <div class="event-description">' + description + '</div>' +
-                '</div>'
 
-            );
+            if(sdate.getTime() < (today.getTime() + 86400000)){
+                event_data.day = 'today';
+                events_data.today.push(event_data);
+            } else {
+                event_data.day = 'tomorrow';
+                events_data.tomorrow.push(event_data);
+            }
         }
+
+        console.log(events_data);
+
+        $('#events').html(Mustache.render(event_template, events_data));
     });
 }
 
 function updateWeather() {
+    var tu = ' &deg;C';
+    var weather_template = 
+        '<div class="weather-day">' +
+        '  <h2> {{ day }} </h2>' +
+        '  <div class="weather-image">' +
+        '    <img src="{{ image }}"/>' +
+        '    <div>{{ high }} ' + tu + '</div>' +
+        '    <div>{{ low }} ' + tu + '</div>' +
+        '  </div>' +
+        '  <div>{{ condition }}</div>' +
+        '</div>';
+    
     $.getJSON(api_url, function(data) {
-        var tu = ' &deg;' + data.weather.temperature_unit;
+        $('#current-temperature').html(Math.round(data.weather.today.temperature) + tu); 
         // Today
-        $('#current-temperature').html('Now: ' + Math.round(data.weather.today.temperature) + tu); 
-        $('#today-image').attr('src', data.weather.today.image);
-        $('#today-condition').html(data.weather.today.condition);
-        $('#today-high').html("High: " + data.weather.today.high + tu);
-        $('#today-low').html("Low: " + data.weather.today.low + tu);
-
+        var day_data = {
+            'day': 'Today',
+            'image': data.weather.today.image,
+            'condition': data.weather.today.condition,
+            'high': data.weather.today.high,
+            'low': data.weather.today.low
+        }
+        $('#weather').html(Mustache.render(weather_template, day_data));
         // Tomorrow
-        $('#tomorrow-title').html(get_day_name(1));
-        $('#tomorrow-image').attr('src', data.weather.tomorrow.image);
-        $('#tomorrow-condition').html(data.weather.tomorrow.condition);
-        $('#tomorrow-low').html("Low: " + data.weather.tomorrow.low + tu);
-        $('#tomorrow-high').html("High: " + data.weather.tomorrow.high + tu);
+        var day_data = {
+            'day': get_day_name(1),
+            'image': data.weather.tomorrow.image,
+            'condition': data.weather.tomorrow.condition,
+            'high': data.weather.tomorrow.high,
+            'low': data.weather.tomorrow.low
+        }
+        $('#weather').append(Mustache.render(weather_template, day_data));
+
         // After tomorrow
-        $('#aftertomorrow-title').html(get_day_name(2));
-        $('#aftertomorrow-image').attr('src', data.weather.after_tomorrow.image);
-        $('#aftertomorrow-condition').html(data.weather.after_tomorrow.condition);
-        $('#aftertomorrow-low').html("Low: " + data.weather.after_tomorrow.low + tu);
-        $('#aftertomorrow-high').html("High: " + data.weather.after_tomorrow.high + tu);
+        var day_data = {
+            'day': get_day_name(2),
+            'image': data.weather.after_tomorrow.image,
+            'condition': data.weather.after_tomorrow.condition,
+            'high': data.weather.after_tomorrow.high,
+            'low': data.weather.after_tomorrow.low
+        }
+        $('#weather').append(Mustache.render(weather_template, day_data));
+
+        $('.weather-image img').on('error', function(){
+            $(this).attr('src', 'img/not_available.png');
+        });
     });
 }
 
@@ -105,11 +181,11 @@ function updateClock () {
 
     var currentHours = currentTime.getHours ( );
     var currentMinutes = currentTime.getMinutes ( );
-    var currentSeconds = currentTime.getSeconds ( );
+    // var currentSeconds = currentTime.getSeconds ( );
 
     // Pad the minutes and seconds with leading zeros, if required
     currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
-    currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+    // currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
 
     // Choose either "AM" or "PM" as appropriate
     var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
@@ -121,7 +197,7 @@ function updateClock () {
     currentHours = ( currentHours == 0 ) ? 12 : currentHours;
 
     // Compose the string for display
-    var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+    var currentTimeString = currentHours + ":" + currentMinutes + " " + timeOfDay;
 
     // Update the time display
     $('#clock').html(currentTimeString);
@@ -133,7 +209,7 @@ function updateDate (currentTime) {
     var dayOfMonth = currentTime.getDate();
     var month = get_month_name(currentTime.getMonth());
     // should add customizations to date string order/appearance based on user settings here
-    var currentDateString = dayOfWeek.substr(0,3) + ", " + month.substr(0,3) + " " + dayOfMonth;
+    var currentDateString = dayOfWeek + ", " + month + " " + dayOfMonth;
     $('#day').html(currentDateString);
 }
 

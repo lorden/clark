@@ -10,8 +10,19 @@ h1 {
 #right-panel {
     float: right;
     font-size: 3em;
+    text-align: center;
 }
 
+#clock, #current-temperature {
+    float: left;
+    margin: 0 10px;
+    font-size: 1.2em;
+}
+
+#day {
+}
+
+/* Weather */
 .weather-day {
     width: 20%;
     float: left;
@@ -20,12 +31,40 @@ h1 {
     margin: 0 5px;
     text-align: center;
 }
+.weather-day h2{
+    font-size: .75em;
+    text-align: left;
+    margin: 0 0 0 10px;
+}
+
+.weather-image {
+    height: 128px;
+}
+.weather-image * {
+    float: left;
+    font-size: 2em;
+}
+.weather-image div {
+    margin-left: 20px;
+}
+
+/* Events */
 #events {
-    background-color: #FFFFFF;
     width: 50%;
+    margin-left: 5px;
+}
+
+#events .event {
+    padding: 5px;
+    background-color: #FFFFFF;
+    margin-top: 1px;
+}
+
+.event-day {
+    padding: 0 5px;
+    font-weight: bold;
 }
 .event-title {
-    font-weight: bold;
 }
 .event-date {
     font-size: 0.7em;
@@ -33,12 +72,12 @@ h1 {
 .event-description {
     font-size: 0.8em;
 }
-.event.user1 {
+#events .event.user1 {
     background-color: #C8D7FF;
 }
-.event.user2 {
+#events .event.user2 {
     background-color: #F1D5FF;
 }
-.event.all {
+#events .event.all {
     background-color: #AAFFAF;
 }

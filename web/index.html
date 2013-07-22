@@ -3,9 +3,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,200' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <link rel="stylesheet" href="jquery.mobile-1.3.1.min.css" />
+    <script src="jquery-1.9.1.min.js"></script>
+    <script src="jquery.mobile-1.3.1.min.js"></script>
+    <script src="mustache.js"></script>
     <script src="clark.js"></script>
     <link rel="stylesheet" href="clark.css" />
 </head>
@@ -13,32 +14,16 @@
     <div data-role="page" id="dashboard">
         <div data-role="content">
             <div id="right-panel">
+              <div class="row">
                 <div id="clock"></div>
-                <div id="day"></div>
                 <div id="current-temperature"></div>
+              </div>
+              <div class="row">
+                <div id="day"></div>
                 <div id="special-day"></div>
+              </div>
             </div>
-            <div class="weather-day">
-                <h2>Today</h2>
-                <img id="today-image" src="" class="weather-image"/>
-                <div id="today-condition"></div>
-                <div id="today-high"></div>
-                <div id="today-low"></div>
-            </div>
-            <div class="weather-day">
-                <h2 id="tomorrow-title">Tomorrow</h2>
-                <img id="tomorrow-image" src="" class="weather-image"/>
-                <div id="tomorrow-condition"></div>
-                <div id="tomorrow-high"></div>
-                <div id="tomorrow-low"></div>
-            </div>
-            <div class="weather-day">
-                <h2 id="aftertomorrow-title">After tomorrow</h2>
-                <img id="aftertomorrow-image" src="" class="weather-image"/>
-                <div id="aftertomorrow-condition"></div>
-                <div id="aftertomorrow-high"></div>
-                <div id="aftertomorrow-low"></div>
-            </div>
+            <div id="weather"></div>
         </div>
         <div data-role="content">
           <div id="events">
