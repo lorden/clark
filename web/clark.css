@@ -15,10 +15,11 @@ h1 {
 #clock, #current-temperature {
     float: left;
     margin: 0 10px;
-    font-size: 1.2em;
+    font-size: 1em;
 }
 
 #day {
+    font-size: .8em;
 }
 
 /* Weather */
@@ -44,12 +45,12 @@ h1 {
     font-size: 2em;
 }
 .weather-image div {
-    margin-left: 20px;
+    margin-left: 10px;
+    font-size: 120%;
 }
 
 /* Events */
 #events {
-    width: 50%;
     margin-left: 5px;
 }
 
@@ -81,8 +82,9 @@ h1 {
     background-color: #AAFFAF;
 }
 #bus {
-    width: 50%;
     float: left;
+    width: 100%;
+    margin-left: 15px;
 }
 .bus_row {
     width: 100%;
@@ -95,21 +97,21 @@ h1 {
 .bus_line {
     width: 30px;
     text-align: center;
-    border: 1px solid #000000;
+    background-color: #FFFFFF;
 }
 .bus_times {
     width: 80%;
-    height: 1em;
+    height: .9em;
+    border-bottom: 1px solid #000000;
 }
 .timeline_bus {
     width: 25px;
     text-align: center;
-    background: red;
-    border: 1px solid blue;
+    background: #FF9396;
     position: absolute;
 }
 .later_bus {
-    border: 1px solid #000000;
+    background-color: #FFFFFF;
     width: 30px;
     text-align: center;
 }
