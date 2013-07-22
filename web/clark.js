@@ -171,16 +171,17 @@ function get_month_name(month){
 
 function updateBus(){
     $.getJSON(api_url + 'bus', function(data) {
-        console.log(data);
         for (bus_line in data) {
-            $('#nextbus #' + data[bus_line][0] + ' .bus_times').html('')
-            $('#nextbus #' + data[bus_line][0] + ' .later_bus').html('')
+            $('#bus .bus_row#' + data[bus_line][0] + ' .bus_times').html('')
+            $('#bus .bus_row#' + data[bus_line][0] + ' .later_bus').html('&nbsp;')
             for (b in data[bus_line][1]) {
                 if (data[bus_line][1][b] < 21) {
-                    $('#nextbus #' + data[bus_line][0] + ' .bus_times').append('<span class="timeline_bus" id=' + data[bus_line][1][b] + '>' + data[bus_line][1][b] + '</span>');
+                    var indent = ((parseInt($('.bus_row').css('width'))-140)/20)*data[bus_line][1][b]+50;
+                    $('#bus .bus_row#' + data[bus_line][0] + ' .bus_times').append(
+                        '<div class="timeline_bus" style="left:' + indent +'px">' + data[bus_line][1][b] + '</div>');
                 }
                 else {
-                    $('#nextbus #' + data[bus_line][0] + ' .later_bus').html(data[bus_line][1][b]);
+                    $('#bus .bus_row#' + data[bus_line][0] + ' .later_bus').html(data[bus_line][1][b]);
                     break;
                 }
             }
