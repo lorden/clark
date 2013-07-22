@@ -247,15 +247,20 @@ function get_month_name(month){
 
 function updateBus(){
     $.getJSON(api_url + 'bus', function(data) {
-        var htmled = "";
         for (bus_line in data) {
-            htmled = htmled + 
-                     "<tr><td>" + data[bus_line][0] + "</td>" +
-                     "<td>" + data[bus_line][1][0] + "</td>" +
-                     "<td>" + data[bus_line][1][1] + "</td>" +
-                     "<td>" + data[bus_line][1][2] + "</td></tr>"
+            $('#bus .bus_row#' + data[bus_line][0] + ' .bus_times').html('')
+            $('#bus .bus_row#' + data[bus_line][0] + ' .later_bus').html('&nbsp;')
+            for (b in data[bus_line][1]) {
+                if (data[bus_line][1][b] < 21) {
+                    var indent = ((parseInt($('.bus_row').css('width'))-140)/20)*data[bus_line][1][b]+50;
+                    $('#bus .bus_row#' + data[bus_line][0] + ' .bus_times').append(
+                        '<div class="timeline_bus" style="left:' + indent +'px">' + data[bus_line][1][b] + '</div>');
+                }
+                else {
+                    $('#bus .bus_row#' + data[bus_line][0] + ' .later_bus').html(data[bus_line][1][b]);
+                    break;
+                }
+            }
         }
-        htmled = "<table id='nextbus'>" + htmled + "</table>";
-        $('#bus').html(htmled); 
     });
 }
