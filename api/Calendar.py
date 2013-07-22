@@ -52,17 +52,20 @@ class Calendar(object):
         try:
           page_token = None
           import datetime
-          now = datetime.datetime.now()
-          time_min = '%s-%s-%sT00:00:00.000-07:00' % (now.year, now.month, now.day)
+          start = datetime.datetime.now()
+          end = datetime.datetime.now() + + datetime.timedelta(2)
+          time_min = '%s-%s-%sT%s:00:00.000-07:00' % (start.year, start.month, start.day, start.hour)
+          time_max = '%s-%s-%sT00:00:00.000-07:00' % (end.year, end.month, end.day)
+           
           while True:
               e = self.service.events().list(
                   calendarId=calendar_id, 
                   pageToken=page_token,
                   timeMin=time_min,
+                  timeMax=time_max,
                   singleEvents=True,
                   orderBy='startTime').execute()
               for event in e['items']:
-                  pprint.pprint(event)
                   if 'dateTime' in event['start']:
                       dt = event['start'].get('dateTime')
                       sdate = dt[0:10]
