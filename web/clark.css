@@ -6,27 +6,26 @@ h1 {
     font-weight: normal;
     margin: 0;
 }
-
+#dashboard, #settings {
+    height: 100%;
+    position: absolute;
+}
 .large {
   font-size: 150%;
 }
-
 .small {
   font-size: 25%;
 }
-
 #right-panel {
     float: right;
     font-size: 3em;
     text-align: center;
 }
-
 #clock, #current-temperature {
     float: left;
     margin: 0 10px;
     font-size: 1em;
 }
-
 #day {
     font-size: .8em;
 }
@@ -45,7 +44,6 @@ h1 {
     text-align: left;
     margin: 0 0 0 10px;
 }
-
 .weather-image {
     height: 128px;
 }
@@ -62,13 +60,11 @@ h1 {
 #events {
     margin-left: 5px;
 }
-
 #events .event {
     padding: 5px;
     background-color: #FFFFFF;
     margin-top: 1px;
 }
-
 .event-day {
     padding: 0 5px;
     font-weight: bold;

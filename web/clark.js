@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $('#settings').css({'top': '100%'});
     updateClock();
     updateWeather();
     updateBus();
@@ -271,4 +272,14 @@ function updateBus(){
             }
         }
     });
+}
+
+function showSettings(){
+    $('#dashboard').animate({'top': '-100%'});
+    $('#settings').animate({'top': '0'});
+}
+
+function showDashboard(){
+    $('#dashboard').animate({'top': '0'});
+    $('#settings').animate({'top': '100%'});
 }
