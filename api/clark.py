@@ -37,8 +37,6 @@ def calendar():
             key += e['name'].encode('ascii', 'ignore')
         if e['start']:
             key += e['start'].encode('ascii', 'ignore')
-        if e['description']:
-            key += e['description'].encode('ascii', 'ignore')
         key = md5(key).hexdigest()
         if key not in single_events:
             single_events[key] = e

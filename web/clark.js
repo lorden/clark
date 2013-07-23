@@ -25,7 +25,8 @@ function updateEvents() {
         '<div class="event-day">Today</div>' +
         '{{ #today }}' +
         '<div class="event {{ calendar }}">' +
-        '   <div class="event-date">{{ start }} / {{ end }}</div>' +
+        '   {{ #start }}<div class="event-date">{{ start }} / {{ end }}</div>{{ /start }}' +
+        '   {{ ^start }}<div class="event-date">All day</div>{{ /start }}' +
         '   <div class="event-title">{{ title }}</div>' +
         '</div>' +
         '{{ /today }}' +
@@ -77,8 +78,8 @@ function updateEvents() {
             } else {
                 time = ['00', '00', '00'];
             }
-            sdate = new Date(date[0], date[1]-1, date[2], time[0], time[1], time[2]);
-            if (sdate.getTime()+ 1000 > today.getTime() + 172800000) {
+            sdate = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
+            if (sdate.getTime() + 1000 > today.getTime() + 172800000) {
                 // This event doesn't belong here, 2 days only
                 continue;
             }
@@ -95,13 +96,19 @@ function updateEvents() {
             } else {
                 time = ['00', '00', '00'];
             }
-            edate = new Date(date[0], date[1], date[2], time[0], time[1], time[2]);
+            edate = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
             pedate = edate.getDate() + '/' + edate.getMonth();
             mins = edate.getMinutes() > 9 ? edate.getMinutes() : ('0' + edate.getMinutes())
             event_data.end = edate.getHours() + ':' + mins;
             if (edate - sdate == 86400000){
                 event_data.start = '';
                 event_data.end = '';
+            }
+
+            // Skip finished events
+            now = new Date();
+            if (edate < now) {
+                continue;
             }
     
             // Description

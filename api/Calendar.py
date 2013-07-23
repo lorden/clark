@@ -50,55 +50,59 @@ class Calendar(object):
     def get_events(self, calendar_id, calendar_name):
         events = []
         try:
-          page_token = None
-          import datetime
-          start = datetime.datetime.now()
-          end = datetime.datetime.now() + + datetime.timedelta(2)
-          time_min = '%s-%s-%sT%s:00:00.000-07:00' % (start.year, start.month, start.day, start.hour)
-          time_max = '%s-%s-%sT00:00:00.000-07:00' % (end.year, end.month, end.day)
-           
-          while True:
-              e = self.service.events().list(
-                  calendarId=calendar_id, 
-                  pageToken=page_token,
-                  timeMin=time_min,
-                  timeMax=time_max,
-                  singleEvents=True,
-                  orderBy='startTime').execute()
-              for event in e['items']:
-                  if 'dateTime' in event['start']:
-                      dt = event['start'].get('dateTime')
-                      sdate = dt[0:10]
-                      stime = dt[11:19]
-                  else:
-                      dt = event['start'].get('date')
-                      sdate = dt[0:10]
-                      stime = '00:00:00'
-                  if 'dateTime' in event['end']:
-                      dt = event['end'].get('dateTime')
-                      edate = dt[0:10]
-                      etime = dt[11:19]
-                  else:
-                      dt = event['end'].get('date')
-                      edate = dt[0:10]
-                      etime = '00:00:00'
+            page_token = None
+            import time
+            import datetime
+            utc_time = time.gmtime()
+            time_min = '%s-%s-%sT00:00:00.000-07:00' % \
+                       (utc_time[0], 
+                        utc_time[1],
+                        utc_time[2])
+            end = datetime.datetime.fromtimestamp(time.mktime(time.gmtime())) + datetime.timedelta(2)
+            time_max = '%s-%s-%sT00:00:00.000-07:00' % (end.year, end.month, end.day)
 
-                  new_event = {
-                      'calendar': calendar_name,
-                      'name': event['summary'],
-                      'description': event.get('description'),
-                      'location': event.get('location'),
-                      'start': '%s %s' % (sdate, stime),
-                      'end': '%s %s' % (edate, etime),
-                  }
-                  events.append(new_event)
+            while True:
+                e = self.service.events().list(
+                    calendarId=calendar_id, 
+                    pageToken=page_token,
+                    timeMin=time_min,
+                    timeMax=time_max,
+                    singleEvents=True,
+                    orderBy='startTime').execute()
+                for event in e['items']:
+                    if 'dateTime' in event['start']:
+                        dt = event['start'].get('dateTime')
+                        sdate = dt[0:10]
+                        stime = dt[11:19]
+                    else:
+                        dt = event['start'].get('date')
+                        sdate = dt[0:10]
+                        stime = '00:00:00'
+                    if 'dateTime' in event['end']:
+                        dt = event['end'].get('dateTime')
+                        edate = dt[0:10]
+                        etime = dt[11:19]
+                    else:
+                        dt = event['end'].get('date')
+                        edate = dt[0:10]
+                        etime = '00:00:00'
 
-              page_token = e.get('nextPageToken')
-              if not page_token:
-                  break
+                    new_event = {
+                        'calendar': calendar_name,
+                        'name': event['summary'],
+                        'description': event.get('description'),
+                        'location': event.get('location'),
+                        'start': '%s %s' % (sdate, stime),
+                        'end': '%s %s' % (edate, etime),
+                    }
+                    events.append(new_event)
+
+                page_token = e.get('nextPageToken')
+                if not page_token:
+                    break
         except AccessTokenRefreshError:
-          print ("The credentials have been revoked or expired, please re-run"
-            "the application to re-authorize")
+            print ("The credentials have been revoked or expired, please re-run"
+                   "the application to re-authorize")
         return events
 
 
