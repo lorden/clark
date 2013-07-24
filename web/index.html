@@ -69,24 +69,35 @@
         </div>
         <div data-role="content">
         </div>
-        <div id="button-panel">
-            <button id="settings_button" onclick="showSettings()">Settings</button>
+        <div class="button-panel">
+            <button class="settings_button" onclick="showSettings()">--</button>
         </div>
     </div>
-    <div id="settings">
-        <div>
-            <div>
-                Date, Time, Temperature Settings
+    <div data-role="page" id="settings">
+        <div data-role="content" id="settings_menu">
+            <div id="settings_basic" class="settings_menu_bar" onclick="showSettingsDisplay(this)">
+                Basic
             </div>
-            <div>
-                Calendar Settings
+            <div id="settings_calendar" class="settings_menu_bar" onclick="showSettingsDisplay(this)">
+                Calendar
             </div>
-            <div>
-                Transportation Settings
+            <div id="settings_transportation" class="settings_menu_bar" onclick="showSettingsDisplay(this)">
+                Transportation
             </div>
         </div>
-        <div id="button-panel">
-            <button id="done_button" onclick="showDashboard()">Done</button>
+        <div data-role="content" id="settings_display">
+            <div id="settings_basic_display">
+                BASIC SETTINGS CHOICES
+            </div>
+            <div id="settings_calendar_display">
+                CALENDAR SETTINGS CHOICES
+            </div>
+            <div id="settings_transportation_display">
+                TRANSPORTATION SETTINGS CHOICES
+            </div>
+        </div>
+        <div class="button-panel">
+            <button class="settings_button" onclick="showDashboard()">--</button>
         </div>
     </div>
 </body>

@@ -1,5 +1,7 @@
 $(document).ready(function(){
-    $('#settings').css({'top': '100%'});
+    $('#settings').css({'top': '100%'}).hide();
+    $('#settings_display').children().hide();
+    $('#settings_basic_display').show();
     updateClock();
     updateWeather();
     updateBus();
@@ -126,8 +128,6 @@ function updateEvents() {
             }
         }
 
-        console.log(events_data);
-
         $('#events').html(Mustache.render(event_template, events_data));
     });
 }
@@ -147,6 +147,7 @@ function updateWeather() {
     
     $.getJSON(api_url, function(data) {
         $('#current-temperature').html('<span class="large">' + Math.round(data.weather.today.temperature) + '</span><span class="small">' + tu + '</span>'); 
+        var currentTime = new Date ( );
         // Today
         var day_data = {
             'day': 'Today',
@@ -158,7 +159,7 @@ function updateWeather() {
         $('#weather').html(Mustache.render(weather_template, day_data));
         // Tomorrow
         var day_data = {
-            'day': get_day_name(1),
+            'day': get_day_name(currentTime.getDay() + 1),
             'image': data.weather.tomorrow.image,
             'condition': data.weather.tomorrow.condition,
             'high': data.weather.tomorrow.high,
@@ -168,7 +169,7 @@ function updateWeather() {
 
         // After tomorrow
         var day_data = {
-            'day': get_day_name(2),
+            'day': get_day_name(currentTime.getDay() + 2),
             'image': data.weather.after_tomorrow.image,
             'condition': data.weather.after_tomorrow.condition,
             'high': data.weather.after_tomorrow.high,
@@ -275,11 +276,17 @@ function updateBus(){
 }
 
 function showSettings(){
-    $('#dashboard').animate({'top': '-100%'});
-    $('#settings').animate({'top': '0'});
+    $('#dashboard').animate({'top': '-100%'}).hide();
+    $('#settings').show().animate({'top': '0'});
 }
 
 function showDashboard(){
-    $('#dashboard').animate({'top': '0'});
-    $('#settings').animate({'top': '100%'});
+    $('#dashboard').show().animate({'top': '0'});
+    $('#settings').animate({'top': '100%'}).hide();
+}
+
+function showSettingsDisplay(menu_item){
+    var which = $(menu_item).attr("id");
+    $('#settings_display').children().hide();
+    $('#' + which + '_display').show();
 }
