@@ -41,8 +41,9 @@ function updateEvents() {
         '<div class="event-day">Tomorrow</div>' +
         '{{ #tomorrow }}' +
         '<div class="event {{ calendar }}">' +
-        ' <div class="event-date">{{ start }} / {{ end }}</div>' +
-        ' <div class="event-title">{{ title }}</div>' +
+        '   {{ #start }}<div class="event-date">{{ start }} / {{ end }}</div>{{ /start }}' +
+        '   {{ ^start }}<div class="event-date">All day</div>{{ /start }}' +
+        '   <div class="event-title">{{ title }}</div>' +
         '</div>' +
         '{{ /tomorrow }}' +
         '{{ ^tomorrow }}' +
