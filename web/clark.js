@@ -225,7 +225,7 @@ function updateDate (currentTime) {
 function get_day_name(day, delta){
     if (typeof(delta) === 'undefined') delta = 0;
     day = day + delta;
-    if (day > 7) day = day % 7;
+    if (day > 6) day = day - 7;
     var weekday=new Array(7);
     weekday[0]="Sunday";
     weekday[1]="Monday";
