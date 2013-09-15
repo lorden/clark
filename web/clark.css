@@ -120,15 +120,18 @@ body {
     background-color: #FFFFFF;
 }
 .bus_times {
-    width: 80%;
-    height: .9em;
+    width: 85%;
+    height: .6em;
     border-bottom: 1px solid #000000;
 }
 .timeline_bus {
-    width: 25px;
+    width: 2em;
     text-align: center;
-    background: #FF9396;
+    background: #A8ADB3;
     position: absolute;
+    border-radius: 1em;
+    padding: 5px;
+    margin: -3px;
 }
 .later_bus {
     background-color: #FFFFFF;

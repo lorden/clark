@@ -270,7 +270,6 @@ function updateBus(){
             for (b in data[bus_line][1]) {
                 if (data[bus_line][1][b] < 21) {
                     var indent = ((parseInt($('.bus_row').css('width'))-140)/20)*data[bus_line][1][b]+50;
-                    indent += 520;
                     $('#bus .bus_row#' + data[bus_line][0] + ' .bus_times').append(
                         '<div class="timeline_bus" style="left:' + indent +'px">' + data[bus_line][1][b] + '</div>');
                 }
