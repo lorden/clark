@@ -15,7 +15,7 @@ $(document).ready(function(){
     });
 });
 
-var api_url = 'http://ec2-54-226-139-147.compute-1.amazonaws.com/';
+var api_url = '/';
 
 function new_updateClock() {
     $.getJSON(api_url, function(data) {
@@ -136,7 +136,8 @@ function updateEvents() {
 function updateWeather() {
     var tu = ' &deg;C';
     var weather_template = 
-        '<div class="weather-day">' +
+        '<div class="small-4 columns" style="padding:0 0.5em 0 0">' +
+        '<div class="weather-day widget">' +
         '  <h2> {{ day }} </h2>' +
         '  <div class="weather-image">' +
         '    <img src="{{ image }}"/>' +
@@ -144,6 +145,7 @@ function updateWeather() {
         '    <div>{{ low }} ' + tu + '</div>' +
         '  </div>' +
         '  <div>{{ condition }}</div>' +
+        '</div>' +
         '</div>';
     
     $.getJSON(api_url, function(data) {
@@ -181,6 +183,11 @@ function updateWeather() {
         $('.weather-image img').on('error', function(){
             $(this).attr('src', 'img/not_available.png');
         });
+
+        // Set height of Clock
+        var h = $('.weather-day').eq(0).css('height');
+        $('#clock').parent().parent().css('height', h);
+        $('#clock').parent().parent().css('padding-top', parseInt(h)/4 + 'px');
     });
 }
 

@@ -6,37 +6,57 @@ h1 {
     font-weight: normal;
     margin: 0;
 }
+
+body {
+  margin: 10px;
+  background-color: #EEEEEE;
+}
+
 #dashboard, #settings {
     height: 100%;
-    position: absolute;
 }
+
 .large {
   font-size: 180%;
 }
+
 .small {
   font-size: 50%;
 }
+
+.center {
+  text-align: center;
+}
+
+.widget {
+  box-shadow: #CCCCCC 1px 1px 10px 0;
+  background-color: #FFFFFF;
+  padding: 1em;
+}
+
+.row {
+  margin: 0 auto 1em;
+}
+
 #right-panel {
     float: right;
     font-size: 2.3em;
     text-align: center;
+    padding:10px 0 25px 0;
 }
 #clock, #current-temperature {
     float: left;
     margin: 0 10px;
-    font-size: 1em;
+    font-size: 1.8em;
 }
 #day {
-    font-size: .8em;
+    font-size: 1.5em;
 }
 
 /* Weather */
 .weather-day {
-    width: 20%;
     float: left;
-    background-color: white;
     padding: 5px;
-    margin: 0 5px;
     text-align: center;
 }
 .weather-day h2{
@@ -53,13 +73,10 @@ h1 {
 }
 .weather-image div {
     margin-left: 10px;
-    font-size: 120%;
+    font-size: 100%;
 }
 
 /* Events */
-#events {
-    margin-left: 5px;
-}
 #events .event {
     padding: 5px;
     background-color: #FFFFFF;
@@ -87,9 +104,7 @@ h1 {
     background-color: #AAFFAF;
 }
 #bus {
-    float: left;
-    width: 100%;
-    margin-left: 15px;
+    margin-left: .5em;
 }
 .bus_row {
     width: 100%;
@@ -147,3 +162,11 @@ h1 {
     background: gray;
 }*/
 
+.first-column {
+  padding-left: 0;
+  padding-right: 0;
+}
+.last-column {
+  padding-left: 0;
+  padding-right: 0;
+}
